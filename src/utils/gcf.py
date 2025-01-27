@@ -9,3 +9,4 @@ class GCF:
         self.limit_angle = np.degrees(np.arctan((self.R+self.r)/self.L))
         self.opening_angle = np.degrees(np.arctan((self.R)/self.L))
         self.slope_angle = np.degrees(np.arctan((self.R-self.r)/self.L))
+        self.field_of_view = 2*self.opening_angle
