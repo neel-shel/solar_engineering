@@ -20,8 +20,9 @@ class SolarParameters:
         self.delta_s = self.solar_declination()
         self.ET = self.equation_of_time()
         self.ST = self.solar_time()
-        self.h_s = self.hour_angle()
+        self.h_s = self.hour_angle()%360
         self.alpha = self.solar_attitude()
+        self.a_s = self.solar_azimuth_angle()
         self.z = self.solar_zenith_angle()
         self.h_ss, self.h_sr = self.sunset_and_sunrise_times()
         
@@ -36,6 +37,7 @@ class SolarParameters:
         print(f"Solar Time (ST): {self.ST}")
         print(f"Hour Angle (h_s): {self.h_s}°")
         print(f"Solar Attitude (alpha): {self.alpha}°")
+        print(f"Solar Azimuth (a_s): {self.a_s}°")
         print(f"Solar Zenith Angle (z): {self.z}°")
 
         print(f"Sunset Time (Local Time): {self.h_ss_local}, Sunrise Time (Local Time): {self.h_sr_local}")
@@ -56,6 +58,10 @@ class SolarParameters:
     def hour_angle(self):
         h_s = 15 * self.hours_from_solar_noon(self.ST)
         return h_s
+    
+    def solar_azimuth_angle(self):
+        a_s = np.degrees(np.arcsin(np.cos(np.radians(self.delta_s))*np.sin(np.radians(self.h_s))/np.cos(np.radians(self.alpha))))
+        return a_s
     
     def solar_attitude(self):
         alpha = np.degrees(np.arcsin(np.sin(np.radians(self.latitude)) * np.sin(np.radians(self.delta_s)) + np.cos(np.radians(self.latitude)) * np.cos(np.radians(self.delta_s)) * np.cos(np.radians(self.h_s))))
@@ -109,13 +115,13 @@ if __name__ == "__main__":
     n = days_from_jan(input_date)
     
     # Example coordinates for Gainesville, Florida
-    latitude = 29.68
-    longitude = -82.27
+    latitude = 27.96
+    longitude = 82.54
     
     # Local Standard Meridian (LST) is typically a multiple of 15 degrees, for example 75°W for Eastern Standard Time
-    l_st = -75  # Local Standard Meridian (EST is 75°W, meaning UTC-5)
+    l_st = 75  # Local Standard Meridian (EST is 75°W, meaning UTC-5)
     
     # Example Local Standard Time (LST) (format "YYYY-MM-DD HH:MM:SS")
-    LST = "2025-02-01 5:00:00"
+    LST = "2025-02-01 12:00:00"
     
     solar_parameters = SolarParameters(n, latitude, longitude, LST, l_st)
